@@ -1,8 +1,13 @@
 var places = _.filter(places, "coordinates");
 
-var App = angular.module('CommitCoffee', []);
+var App = angular
+	.module('CommitCoffee', [])
+	.config(['$locationProvider',function ($locationProvider) {
+		$locationProvider.html5Mode(true);
+	}]);
 
-App.controller('Controller', function ($scope, $location) {
+
+App.controller('Controller', function ($scope, $location, $anchorScroll) {
 
 	var mapOptions = {
 		center: new google.maps.LatLng(40, -10),
@@ -53,6 +58,7 @@ App.controller('Controller', function ($scope, $location) {
 				$scope.$apply(function(){
 					$scope.locationDetails = marker.location;
 					$scope.showDetails = 2;
+					$scope.mapsURL = encodeURIComponent(marker.location.coordinates.join(', '));
 				});
 			});
 
@@ -61,6 +67,10 @@ App.controller('Controller', function ($scope, $location) {
 	});
 
 	$scope.search = function () {
+
+		$location.hash('search');
+
+		// $anchorScroll();
 
 		var geocoder = new google.maps.Geocoder();
 
